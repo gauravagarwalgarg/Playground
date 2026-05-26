@@ -1,38 +1,58 @@
 # Notes
 
-> Conference notes, tech talks, meetups, and learning sessions.
+> Captured learnings from conferences, tech talks, meetups, courses, and deep dives.
 
-## Organization
+---
+
+## Structure
 
 ```
 Notes/
-  Graph.md              # Graph algorithms notes
-  <conference-name>/    # Notes from specific conferences
-  <topic>.md            # Topic-specific notes
+├── conferences/       # CppCon, GopherCon, PyCon, KubeCon, etc.
+├── tech-talks/        # Individual talks, YouTube deep dives
+├── courses/           # Online courses (Coursera, MIT OCW, etc.)
+└── deep-dives/        # Self-directed research on specific topics
 ```
 
-## How to Use
+## Conferences
 
-- Add notes from conferences, tech talks, and meetups
-- Use markdown with code snippets where applicable
-- Tag with date and source for reference
-- Keep notes concise new_textfocus on key takeaways and action items
+| Conference | Focus | Notes |
+|-----------|-------|-------|
+| CppCon | Modern C++, performance, concurrency | |
+| GopherCon | Go ecosystem, concurrency patterns | |
+| KubeCon | Kubernetes, cloud-native, service mesh | |
+| PyCon | Python ecosystem, ML, web | |
+| Strange Loop | Distributed systems, PLT, databases | |
+| FOSDEM | Open source, Linux, embedded | |
 
-## Template
+## Tech Talks Worth Revisiting
+
+- "The Art of Code" - Dylan Beattie
+- "Concurrency is not Parallelism" - Rob Pike
+- "Simple Made Easy" - Rich Hickey
+- "The Future of Programming" - Bret Victor
+- "How to Design a Good API" - Joshua Bloch
+- "Performance Matters" - Emery Berger
+
+## Note-Taking Template
 
 ```markdown
-# [Talk/Conference Name]
+# Talk: <Title>
+**Speaker**: <Name>
+**Event**: <Conference/Meetup>
 **Date**: YYYY-MM-DD
-**Speaker**: Name
-**Source**: [link]
+**Link**: <URL>
 
-## Key Takeaways
-1. ...
-2. ...
+## Key Ideas
+- ...
 
-## Notes
-...
+## Quotes
+> ...
 
 ## Action Items
 - [ ] ...
+
+## Related
+- <link to code in Languages/>
+- <link to book in Reads/>
 ```
