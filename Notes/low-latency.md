@@ -126,7 +126,7 @@ vec.emplace_back(1, 2); // constructs in place
 
 ### 🔹 `alignas`, `alignof`
 
-Control memory layout — useful for SIMD/low-level optimization.
+Control memory layout useful for SIMD/low-level optimization.
 
 ```cpp
 alignas(64) struct AlignedData {
