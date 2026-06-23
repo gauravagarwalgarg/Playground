@@ -23,7 +23,7 @@ public:
     }
 };
 ```
-👉 **Problem**: The class **does too many things**—brewing coffee, displaying status, and logging.
+👉 **Problem**: The class **does too many things**brewing coffee, displaying status, and logging.
 
 ### **Good Example (Following SRP)**
 ```cpp
