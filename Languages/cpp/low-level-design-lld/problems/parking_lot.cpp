@@ -1,52 +1,91 @@
 /**
  * LLD Problem: Parking Lot System
  *
- * Design a parking lot with multiple levels, different vehicle sizes,
- * and basic park/unpark operations.
+ * Design a parking lot with:
+ * - Vehicle hierarchy: Motorcycle, Car, Bus (polymorphism)
+ * - ParkingSpot types: MOTORCYCLE, COMPACT, LARGE
+ * - ParkingLot class that finds available spots by vehicle type
+ *
+ * Demonstrates: Inheritance, polymorphism, encapsulation, composition.
  */
 #include <iostream>
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include <memory>
 #include <cassert>
 using namespace std;
 
-enum class VehicleSize { SMALL, MEDIUM, LARGE };
+// --- Vehicle Hierarchy ---
+enum class VehicleType { MOTORCYCLE, CAR, BUS };
 
 class Vehicle {
 public:
-    Vehicle(string plate, VehicleSize size) : plate_(plate), size_(size) {}
+    Vehicle(string plate, VehicleType type) : plate_(plate), type_(type) {}
+    virtual ~Vehicle() = default;
+    virtual string description() const = 0;
     string plate() const { return plate_; }
-    VehicleSize size() const { return size_; }
+    VehicleType type() const { return type_; }
 private:
     string plate_;
-    VehicleSize size_;
+    VehicleType type_;
 };
+
+class Motorcycle : public Vehicle {
+public:
+    Motorcycle(string plate) : Vehicle(plate, VehicleType::MOTORCYCLE) {}
+    string description() const override { return "Motorcycle [" + plate() + "]"; }
+};
+
+class Car : public Vehicle {
+public:
+    Car(string plate) : Vehicle(plate, VehicleType::CAR) {}
+    string description() const override { return "Car [" + plate() + "]"; }
+};
+
+class Bus : public Vehicle {
+public:
+    Bus(string plate) : Vehicle(plate, VehicleType::BUS) {}
+    string description() const override { return "Bus [" + plate() + "]"; }
+};
+
+// --- Parking Spot ---
+enum class SpotType { MOTORCYCLE, COMPACT, LARGE };
 
 class ParkingSpot {
 public:
-    ParkingSpot(int id, VehicleSize size) : id_(id), size_(size), vehicle_(nullptr) {}
+    ParkingSpot(int id, SpotType type) : id_(id), type_(type), vehicle_(nullptr) {}
 
     bool canFit(const Vehicle& v) const {
-        return !occupied() && v.size() <= size_;
+        if (occupied()) return false;
+        switch (v.type()) {
+            case VehicleType::MOTORCYCLE: return true;  // fits anywhere
+            case VehicleType::CAR: return type_ == SpotType::COMPACT || type_ == SpotType::LARGE;
+            case VehicleType::BUS: return type_ == SpotType::LARGE;
+        }
+        return false;
     }
+
     bool occupied() const { return vehicle_ != nullptr; }
     void park(Vehicle* v) { vehicle_ = v; }
     void unpark() { vehicle_ = nullptr; }
     int id() const { return id_; }
+    SpotType type() const { return type_; }
+
 private:
     int id_;
-    VehicleSize size_;
+    SpotType type_;
     Vehicle* vehicle_;
 };
 
+// --- Parking Lot ---
 class ParkingLot {
 public:
-    ParkingLot(int small, int medium, int large) {
+    ParkingLot(int motorcycleSpots, int compactSpots, int largeSpots) {
         int id = 0;
-        for (int i = 0; i < small; i++) spots_.emplace_back(id++, VehicleSize::SMALL);
-        for (int i = 0; i < medium; i++) spots_.emplace_back(id++, VehicleSize::MEDIUM);
-        for (int i = 0; i < large; i++) spots_.emplace_back(id++, VehicleSize::LARGE);
+        for (int i = 0; i < motorcycleSpots; i++) spots_.emplace_back(id++, SpotType::MOTORCYCLE);
+        for (int i = 0; i < compactSpots; i++) spots_.emplace_back(id++, SpotType::COMPACT);
+        for (int i = 0; i < largeSpots; i++) spots_.emplace_back(id++, SpotType::LARGE);
     }
 
     int park(Vehicle& v) {
@@ -57,7 +96,7 @@ public:
                 return spot.id();
             }
         }
-        return -1; // lot full
+        return -1; // no available spot
     }
 
     bool unpark(const string& plate) {
@@ -68,7 +107,14 @@ public:
         return true;
     }
 
-    int available() const {
+    int availableSpots(SpotType type) const {
+        int count = 0;
+        for (const auto& s : spots_)
+            if (!s.occupied() && s.type() == type) count++;
+        return count;
+    }
+
+    int totalAvailable() const {
         int count = 0;
         for (const auto& s : spots_) if (!s.occupied()) count++;
         return count;
@@ -80,23 +126,34 @@ private:
 };
 
 int main() {
-    ParkingLot lot(2, 3, 1); // 6 total spots
-    assert(lot.available() == 6);
+    // 2 motorcycle spots, 3 compact spots, 1 large spot
+    ParkingLot lot(2, 3, 1);
+    assert(lot.totalAvailable() == 6);
 
-    Vehicle car1("MH-01-1234", VehicleSize::MEDIUM);
-    Vehicle bike("MH-01-5678", VehicleSize::SMALL);
-    Vehicle truck("MH-01-9999", VehicleSize::LARGE);
+    // Polymorphism: different vehicle types
+    Motorcycle bike("MOTO-001");
+    Car car1("CAR-001");
+    Car car2("CAR-002");
+    Bus bus("BUS-001");
 
-    int spot1 = lot.park(car1);
-    assert(spot1 >= 0);
-    assert(lot.available() == 5);
+    cout << "Parking: " << bike.description() << endl;
+    assert(lot.park(bike) >= 0);
 
-    lot.park(bike);
-    lot.park(truck);
-    assert(lot.available() == 3);
+    cout << "Parking: " << car1.description() << endl;
+    assert(lot.park(car1) >= 0);
 
-    assert(lot.unpark("MH-01-1234") == true);
-    assert(lot.available() == 4);
+    cout << "Parking: " << bus.description() << endl;
+    assert(lot.park(bus) >= 0);
+    assert(lot.availableSpots(SpotType::LARGE) == 0);
+
+    // Bus can't park - no large spots left
+    Bus bus2("BUS-002");
+    assert(lot.park(bus2) == -1);
+
+    // Unpark and repark
+    assert(lot.unpark("BUS-001") == true);
+    assert(lot.availableSpots(SpotType::LARGE) == 1);
+    assert(lot.park(bus2) >= 0);
 
     assert(lot.unpark("INVALID") == false);
 
