@@ -1,35 +1,46 @@
 #!/bin/bash
-# Docker cleanup: remove stopped containers, dangling images, unused volumes
-# Usage: ./docker_cleanup.sh [--dry-run]
-
 set -euo pipefail
 
-DRY_RUN="${1:-}"
+# Docker Cleanup Script
+# Stops all running containers, removes dangling images/volumes,
+# and performs a system prune to reclaim disk space.
 
-echo "=== Docker Disk Usage ==="
+echo "=== Docker Cleanup ==="
+echo "Starting at $(date)"
+echo
+
+# Stop all running containers
+echo "--- Stopping all running containers ---"
+running=$(docker ps -q)
+if [ -n "$running" ]; then
+    docker stop $running
+    echo "Stopped $(echo "$running" | wc -l) container(s)"
+else
+    echo "No running containers"
+fi
+
+# Remove stopped containers
+echo -e "\n--- Removing stopped containers ---"
+docker container prune -f
+
+# Remove dangling images (untagged)
+echo -e "\n--- Removing dangling images ---"
+docker image prune -f
+
+# Remove unused volumes
+echo -e "\n--- Removing unused volumes ---"
+docker volume prune -f
+
+# Remove unused networks
+echo -e "\n--- Removing unused networks ---"
+docker network prune -f
+
+# Full system prune (optional: add --volumes for volume cleanup)
+echo -e "\n--- System prune (unused data) ---"
+docker system prune -f
+
+# Show disk usage summary
+echo -e "\n--- Current Docker disk usage ---"
 docker system df
 
-echo ""
-echo "=== Stopped Containers ==="
-docker ps -a --filter "status=exited" --format "{{.ID}} {{.Names}} ({{.Status}})"
-
-echo ""
-echo "=== Dangling Images ==="
-docker images -f "dangling=true" --format "{{.ID}} {{.Repository}}:{{.Tag}} ({{.Size}})"
-
-if [ "$DRY_RUN" = "--dry-run" ]; then
-    echo ""
-    echo "[DRY RUN] No changes made."
-    exit 0
-fi
-
-echo ""
-read -p "Proceed with cleanup? (y/N) " confirm
-if [ "$confirm" = "y" ] || [ "$confirm" = "Y" ]; then
-    docker container prune -f
-    docker image prune -f
-    docker volume prune -f
-    docker network prune -f
-    echo "Cleanup complete."
-    docker system df
-fi
+echo -e "\n✓ Cleanup complete at $(date)"
