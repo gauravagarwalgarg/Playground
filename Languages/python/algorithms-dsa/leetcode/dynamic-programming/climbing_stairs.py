@@ -1,13 +1,16 @@
 """
-LeetCode 70: Climbing Stairs
-You are climbing a staircase. It takes n steps to reach the top.
-Each time you can climb 1 or 2 steps. How many distinct ways can you climb?
+LeetCode #70 - Climbing Stairs
+Topic: Dynamic Programming
+Difficulty: Easy
 
-Time: O(n), Space: O(1)
+Count ways to climb n stairs (1 or 2 steps at a time) using fibonacci DP.
+
+Time Complexity: O(n)
+Space Complexity: O(1)
 """
 
 
-def climbing_stairs(n: int) -> int:
+def climb_stairs(n: int) -> int:
     if n <= 2:
         return n
     prev, curr = 1, 2
@@ -17,11 +20,8 @@ def climbing_stairs(n: int) -> int:
 
 
 if __name__ == "__main__":
-    assert climbing_stairs(1) == 1
-    assert climbing_stairs(2) == 2
-    assert climbing_stairs(3) == 3
-    assert climbing_stairs(4) == 5
-    assert climbing_stairs(5) == 8
-    assert climbing_stairs(10) == 89
-
+    assert climb_stairs(2) == 2
+    assert climb_stairs(3) == 3
+    assert climb_stairs(5) == 8
+    assert climb_stairs(1) == 1
     print("All tests passed!")

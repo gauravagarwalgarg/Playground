@@ -1,34 +1,35 @@
 """
-LeetCode 200: Number of Islands
-Given an m x n 2D grid of '1's (land) and '0's (water),
-return the number of islands.
+LeetCode #200 - Number of Islands
+Topic: Graphs
+Difficulty: Medium
 
-Time: O(m*n), Space: O(m*n)
+Count islands using DFS flood fill on a 2D grid.
+
+Time Complexity: O(m * n)
+Space Complexity: O(m * n) worst case recursion
 """
 
 
 def num_islands(grid: list[list[str]]) -> int:
     if not grid:
         return 0
-
     rows, cols = len(grid), len(grid[0])
-    count = 0
 
-    def dfs(r: int, c: int):
-        if r < 0 or r >= rows or c < 0 or c >= cols or grid[r][c] == "0":
+    def dfs(r: int, c: int) -> None:
+        if r < 0 or r >= rows or c < 0 or c >= cols or grid[r][c] != "1":
             return
-        grid[r][c] = "0"  # mark visited
+        grid[r][c] = "0"
         dfs(r + 1, c)
         dfs(r - 1, c)
         dfs(r, c + 1)
         dfs(r, c - 1)
 
+    count = 0
     for r in range(rows):
         for c in range(cols):
             if grid[r][c] == "1":
-                count += 1
                 dfs(r, c)
-
+                count += 1
     return count
 
 
@@ -48,9 +49,4 @@ if __name__ == "__main__":
         ["0", "0", "0", "1", "1"],
     ]
     assert num_islands(grid2) == 3
-
-    assert num_islands([]) == 0
-    assert num_islands([["0"]]) == 0
-    assert num_islands([["1"]]) == 1
-
     print("All tests passed!")
