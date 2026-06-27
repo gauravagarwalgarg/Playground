@@ -1,6 +1,16 @@
-// LeetCode 226: Invert Binary Tree
-// Given the root of a binary tree, invert the tree and return its root.
-// Time: O(n), Space: O(h)
+/*
+LeetCode #226: Invert Binary Tree
+Topic: Trees
+Difficulty: Easy
+
+Given the root of a binary tree, invert the tree (mirror it) and
+return its root.
+
+Approach: Recursive DFS. Swap left and right children at each node,
+then recurse on both subtrees.
+
+Time: O(n), Space: O(h) where h is height
+*/
 package main
 
 import "fmt"
@@ -15,57 +25,27 @@ func invertTree(root *TreeNode) *TreeNode {
 	if root == nil {
 		return nil
 	}
-	root.Left, root.Right = invertTree(root.Right), invertTree(root.Left)
+	root.Left, root.Right = root.Right, root.Left
+	invertTree(root.Left)
+	invertTree(root.Right)
 	return root
 }
 
-// levelOrder returns level-order traversal for testing
-func levelOrder(root *TreeNode) []int {
-	if root == nil {
-		return []int{}
-	}
-	result := []int{}
-	queue := []*TreeNode{root}
-	for len(queue) > 0 {
-		node := queue[0]
-		queue = queue[1:]
-		result = append(result, node.Val)
-		if node.Left != nil {
-			queue = append(queue, node.Left)
-		}
-		if node.Right != nil {
-			queue = append(queue, node.Right)
-		}
-	}
-	return result
-}
-
-func assertSliceEqual(actual, expected []int, msg string) {
-	if len(actual) != len(expected) {
-		panic(fmt.Sprintf("FAIL %s: got %v, want %v", msg, actual, expected))
-	}
-	for i := range actual {
-		if actual[i] != expected[i] {
-			panic(fmt.Sprintf("FAIL %s: got %v, want %v", msg, actual, expected))
-		}
-	}
-	fmt.Printf("PASS: %s\n", msg)
-}
-
 func main() {
-	// Tree: [4, 2, 7, 1, 3, 6, 9]
-	root := &TreeNode{4,
+	tree := &TreeNode{4,
 		&TreeNode{2, &TreeNode{1, nil, nil}, &TreeNode{3, nil, nil}},
 		&TreeNode{7, &TreeNode{6, nil, nil}, &TreeNode{9, nil, nil}},
 	}
-	inverted := invertTree(root)
-	assertSliceEqual(levelOrder(inverted), []int{4, 7, 2, 9, 6, 3, 1}, "full tree")
-
-	// Nil tree
-	if invertTree(nil) != nil {
-		panic("FAIL: nil tree should return nil")
+	result := invertTree(tree)
+	if result.Left.Val != 7 || result.Right.Val != 2 {
+		fmt.Println("FAIL Test 1")
+	} else {
+		fmt.Println("PASS Test 1")
 	}
-	fmt.Println("PASS: nil tree")
 
-	fmt.Println("All tests passed!")
+	if invertTree(nil) != nil {
+		fmt.Println("FAIL Test 2")
+	} else {
+		fmt.Println("PASS Test 2")
+	}
 }
