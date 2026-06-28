@@ -29,5 +29,13 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Pattern Index: pattern-index.md
-  - Study Roadmap: study-roadmap.md
+  - Coding Patterns:
+    - Pattern Index: pattern-index.md
+    - Study Roadmap: study-roadmap.md
+    - All 19 Patterns: coding-patterns.md
+  - Languages:
+    - C++: languages/cpp.md
+    - Python: languages/python.md
+    - Go: languages/go.md
+    - Java: languages/java.md
+    - JavaScript: languages/javascript.md
