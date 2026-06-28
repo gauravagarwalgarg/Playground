@@ -1,0 +1,33 @@
+site_name: Interview Preparation Playground
+site_description: Structured, compilable, interview-ready code across multiple languages
+site_url: https://gauravagarwalgarg.github.io/Playground/
+repo_url: https://github.com/GauravAgarwalGarg/Playground
+repo_name: GauravAgarwalGarg/Playground
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: indigo
+      accent: amber
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - content.code.copy
+    - search.suggest
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Pattern Index: pattern-index.md
+  - Study Roadmap: study-roadmap.md
