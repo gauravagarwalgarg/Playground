@@ -1,0 +1,9 @@
+[package]
+name = "playground-rust"
+version = "0.1.0"
+edition = "2021"
+description = "Interview preparation - Rust implementations"
+
+[[bin]]
+name = "playground"
+path = "src/main.rs"
