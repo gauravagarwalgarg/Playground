@@ -1,5 +1,12 @@
 # Interview Preparation Playground
 
+[![CI](https://github.com/gauravagarwalgarg/playground/actions/workflows/ci.yml/badge.svg)](https://github.com/gauravagarwalgarg/playground/actions/workflows/ci.yml) [![Docs](https://img.shields.io/badge/docs-live-blue?logo=github)](https://gauravagarwalgarg.github.io/playground/) ![Multi-Language](https://img.shields.io/badge/C++-Go-Python-Java-blue) [![License](https://img.shields.io/github/license/gauravagarwalgarg/playground)](https://github.com/gauravagarwalgarg/playground/blob/develop/LICENSE)
+
+> 📖 **Documentation**: [https://gauravagarwalgarg.github.io/playground/](https://gauravagarwalgarg.github.io/playground/)
+>
+> 📦 **Repository**: [GitHub](https://github.com/gauravagarwalgarg/playground)
+
+
 > Structured, compilable, interview-ready code across multiple languages. DSA, System Design, LLD, OS, Networking, Databases, Design Patterns, and more.
 
 ---
